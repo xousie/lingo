@@ -28,10 +28,10 @@ export const getCourses = cache(async () => {
   return data;
 });
 
-export const getCoursesById = cache(async (coursesId: number) => {
+export const getCourseById = cache(async (coursesId: number) => {
   const data = await db.query.courses.findFirst({
     where: eq(courses.id, coursesId),
-    //
+    // Todo
   });
 
   return data;
