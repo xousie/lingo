@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Nunito } from "next/font/google";
 import "./globals.css";
+
 import { Toaster } from "@/components/ui/sonner";
+import { ExitModal } from "@/components/modals/exit-modal";
 
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -34,7 +36,8 @@ export default function RootLayout({
     <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
         <body className={`${font.variable} antialiased`}>
-          <Toaster richColors />
+          <Toaster />
+          <ExitModal />
           {children}
         </body>
       </html>
