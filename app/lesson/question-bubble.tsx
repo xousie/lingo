@@ -1,21 +1,23 @@
+import { challengeOptions } from "@/db/schema";
 import Image from "next/image";
 
 type Props = {
   question: string;
+  options: (typeof challengeOptions.$inferSelect)[];
 };
 
-export const QuestionBubble = ({ question }: Props) => {
+export const QuestionBubble = ({ question, options }: Props) => {
   return (
     <div className="flex items-center gap-x-4 mb-6">
       <Image
-        src="/speed.svg"
+        src={options[0].imageSrc}
         alt="mayb?"
         height={60}
         width={60}
         className="hidden lg:block"
       />
       <Image
-        src="/speed.svg"
+        src={options[0].imageSrc}
         alt="mayb?"
         height={40}
         width={40}
