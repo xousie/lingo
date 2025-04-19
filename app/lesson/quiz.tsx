@@ -1,6 +1,6 @@
 "use client";
 
-import { challengeOptions, challenges } from "@/db/schema";
+import { challengeOptions, challenges, userSubscription } from "@/db/schema";
 
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
@@ -28,7 +28,11 @@ type Props = {
   })[];
   initialHearts: number;
   initialPercentage: number;
-  userSubcription: any;
+  userSubscription:
+    | (typeof userSubscription.$inferSelect & {
+        isActive: boolean;
+      })
+    | null;
 };
 
 export const Quiz = ({
@@ -36,7 +40,7 @@ export const Quiz = ({
   initialLessonChallenges,
   initialHearts,
   initialPercentage,
-  userSubcription,
+  userSubscription,
 }: Props) => {
   const { open: openHeartsModal } = useHeartsModal();
   const { open: openPracticeModal } = usePracticeModal();
@@ -132,7 +136,7 @@ export const Quiz = ({
               setHearts((prev) => Math.min(prev + 1, 5));
             }
           })
-          .catch(() => toast.error("Something went wrong. Please try again."));
+          .catch(() => toast.error("Something went wrong"));
       });
     } else {
       startTransition(() => {
@@ -150,7 +154,7 @@ export const Quiz = ({
               setHearts((prev) => Math.max(prev - 1, 0));
             }
           })
-          .catch(() => toast.error("Something went wrong. Please try again."));
+          .catch(() => toast.error("Something went wrong"));
       });
     }
   };
@@ -210,7 +214,7 @@ export const Quiz = ({
       <Header
         hearts={hearts}
         percentage={percentage}
-        hasActiveSubscription={!!userSubcription?.isActive}
+        hasActiveSubscription={!!userSubscription?.isActive}
       />
       <div className="flex-1">
         <div className="h-full flex items-center justify-center">

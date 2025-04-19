@@ -39,11 +39,14 @@ export const getUnits = cache(async () => {
   }
 
   const data = await db.query.units.findMany({
+    orderBy: (units, { asc }) => [asc(units.order)],
     where: eq(units.courseId, userProgress.activeCourseId),
     with: {
       lessons: {
+        orderBy: (lessons, { asc }) => [asc(lessons.order)],
         with: {
           challenges: {
+            orderBy: (challenges, { asc }) => [asc(challenges.order)],
             with: {
               challengeProgress: {
                 where: eq(challengeProgress.userId, userId),
@@ -83,7 +86,16 @@ export const getCourses = cache(async () => {
 export const getCourseById = cache(async (coursesId: number) => {
   const data = await db.query.courses.findFirst({
     where: eq(courses.id, coursesId),
-    // Todo
+    with: {
+      units: {
+        orderBy: (units, { asc }) => [asc(units.order)],
+        with: {
+          lessons: {
+            orderBy: (lessons, { asc }) => [asc(lessons.order)],
+          },
+        },
+      },
+    },
   });
 
   return data;
@@ -206,7 +218,7 @@ export const getLessonPercentage = cache(async () => {
 });
 
 const DAY_IN_MS = 84_000_000;
-export const getUserSubcription = cache(async () => {
+export const getUserSubscription = cache(async () => {
   const { userId } = await auth();
 
   if (!userId) {

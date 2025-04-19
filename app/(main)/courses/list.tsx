@@ -4,9 +4,7 @@ import { courses, userProgress } from "@/db/schema";
 import { Card } from "./card";
 import { useRouter } from "next/navigation";
 import { startTransition, useTransition } from "react";
-import { start } from "repl";
 import { upsertUserProgress } from "@/actions/user-progress";
-import { on } from "events";
 import { toast } from "sonner";
 
 type Props = {

@@ -1,7 +1,7 @@
 import { FeedWrapper } from "@/components/feed-wrapper";
 import { StickyWrapper } from "@/components/sticky-wrapper";
 import { UserProgress } from "@/components/user-progress";
-import { getUserProgress, getUserSubcription } from "@/db/queries";
+import { getUserProgress, getUserSubscription } from "@/db/queries";
 
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -9,7 +9,7 @@ import { Items } from "./items";
 
 const ShopPage = async () => {
   const userProgressData = getUserProgress();
-  const userSubscriptionData = getUserSubcription();
+  const userSubscriptionData = getUserSubscription();
 
   const [userProgress, userSubscription] = await Promise.all([
     userProgressData,

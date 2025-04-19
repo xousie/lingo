@@ -1,7 +1,6 @@
 import { lessons, units } from "@/db/schema";
 import { UnitBanner } from "./unit-banner";
 import { LessonButton } from "./lesson-button";
-import { index } from "drizzle-orm/gel-core";
 
 type Props = {
   id: number;
