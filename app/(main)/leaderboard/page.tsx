@@ -72,7 +72,7 @@ const LeaderboardPage = async () => {
               </Avatar>
               <p className="font-bold text-neutral-800 flex-1 flex items-center overflow-hidden">
                 <span className="truncate">{userProgress.userName}</span>
-                {isPro && (
+                {userProgress.isPro && (
                   <span
                     className="ml-2 mr-2 inline-block text-xs font-semibold rounded px-1.5 py-0.5 flex-shrink-0 text-white"
                     style={{

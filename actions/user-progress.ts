@@ -34,11 +34,14 @@ export const upsertUserProgress = async (courseId: number) => {
   const existingUserProgress = await getUserProgress();
 
   if (existingUserProgress) {
-    await db.update(userProgress).set({
-      activeCourseId: courseId,
-      userName: user.firstName || "User",
-      userImageSrc: user.imageUrl || "/xdd.svg",
-    });
+    await db
+      .update(userProgress)
+      .set({
+        activeCourseId: courseId,
+        userName: user.firstName || "User",
+        userImageSrc: user.imageUrl || "/xdd.svg",
+      })
+      .where(eq(userProgress.userId, userId));
 
     revalidatePath("/courses");
     revalidatePath("/learn");

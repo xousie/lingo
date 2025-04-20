@@ -2,7 +2,7 @@ import { cache } from "react";
 import { auth } from "@clerk/nextjs/server";
 
 import db from "./drizzle";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import {
   challengeProgress,
   challenges,
@@ -250,16 +250,33 @@ export const getTopTenUsers = cache(async () => {
     return [];
   }
 
-  const data = await db.query.userProgress.findMany({
-    orderBy: (userProgress, { desc }) => [desc(userProgress.points)],
-    limit: 10,
-    columns: {
-      userId: true,
-      userName: true,
-      userImageSrc: true,
-      points: true,
-    },
-  });
+  // const data = await db.query.userProgress.findMany({
+  //   orderBy: (userProgress, { desc }) => [desc(userProgress.points)],
+  //   limit: 10,
+  //   columns: {
+  //     userId: true,
+  //     userName: true,
+  //     userImageSrc: true,
+  //     points: true,
+  //     isPro: userSubscription.isActive,
+  //   },
+  // });
+
+  const data = await db
+    .select({
+      userId: userProgress.userId,
+      userName: userProgress.userName,
+      userImageSrc: userProgress.userImageSrc,
+      points: userProgress.points,
+      isPro: userSubscription.userId,
+    })
+    .from(userProgress)
+    .leftJoin(
+      userSubscription,
+      eq(userProgress.userId, userSubscription.userId)
+    )
+    .orderBy(desc(userProgress.points))
+    .limit(10);
 
   return data;
 });
