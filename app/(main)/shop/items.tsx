@@ -51,11 +51,16 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
         <Button
           onClick={onRefillHearts}
           disabled={pending || hearts === 5 || points < POINTS_TO_REFILL}
+          variant={
+            pending || hearts === 5 || points < POINTS_TO_REFILL
+              ? "default"
+              : "primary"
+          }
         >
           {hearts === 5 ? (
             "full"
           ) : (
-            <div className="flex items-center">
+            <div className="flex items-center cursor-pointer">
               <Image src="/points.svg" alt="Points" height={25} width={25} />
               <p>{POINTS_TO_REFILL}</p>
             </div>
@@ -72,7 +77,8 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
         <Button
           onClick={onUpgrade}
           disabled={pending}
-          variant={hasActiveSubscription ? "super" : "primary"}
+          variant={hasActiveSubscription ? "primary" : "super"}
+          className="cursor-pointer"
         >
           {hasActiveSubscription ? "settings" : "upgrade"}
         </Button>
