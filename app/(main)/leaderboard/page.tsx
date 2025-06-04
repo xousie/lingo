@@ -10,6 +10,7 @@ import {
   getUserProgress,
   getUserSubscription,
 } from "@/db/queries";
+import { formatPoints } from "@/lib/utils";
 
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -71,12 +72,13 @@ const LeaderboardPage = async () => {
                 />
               </Avatar>
               <p className="font-bold text-neutral-800 flex-1 flex items-center overflow-hidden">
-                <span className="truncate">{userProgress.userName}</span>
-                {userProgress.isPro && (
-                  <span
-                    className="ml-2 mr-2 inline-block text-xs font-semibold rounded px-1.5 py-0.5 flex-shrink-0 text-white"
-                    style={{
-                      backgroundImage: `linear-gradient(
+                <span className="truncate mr-2">{userProgress.userName}</span>
+                <div className="flex items-center justify-center mr-2">
+                  {userProgress.isPro && (
+                    <span
+                      className="ml-1 mr-1 inline-block text-xs font-bold rounded px-1.5 py-0.5 flex-shrink-0 text-white"
+                      style={{
+                        backgroundImage: `linear-gradient(
                       90deg,
                       #6366f1 0%,
                       #7c5df6 16.6%,
@@ -86,18 +88,42 @@ const LeaderboardPage = async () => {
                       #7c5df6 83.3%,
                       #6366f1 100%
                     )`,
-                      backgroundSize: "800% auto",
-                      animation: "gradientLoop 12s linear infinite",
-                      boxShadow: "0 0 8px #c084fc88",
-                      border: "1px solid rgba(255, 255, 255, 0.15)",
-                    }}
-                  >
-                    PRO
-                  </span>
-                )}
+                        backgroundSize: "800% auto",
+                        animation: "gradientLoop 12s linear infinite",
+                        boxShadow: "0 0 8px #c084fc88",
+                        border: "1px solid rgba(255, 255, 255, 0.15)",
+                      }}
+                    >
+                      PRO
+                    </span>
+                  )}
+                  {userProgress.points >= 1000000 && (
+                    <span
+                      className="ml-1 mr-1 inline-block text-xs font-bold rounded px-1.5 py-0.5 flex-shrink-0 text-white"
+                      style={{
+                        backgroundImage: `linear-gradient(
+                          90deg,
+                          #ff3366 0%,
+                          #ff6680 16.6%,
+                          #ff1e56 33.3%,
+                          #ff4d6d 50%,
+                          #ff1e56 66.6%,
+                          #ff6680 83.3%,
+                          #ff3366 100%
+                        )`,
+                        backgroundSize: "800% auto",
+                        animation: "gradientLoop 12s linear infinite",
+                        boxShadow: "0 0 8px #ff004088",
+                        border: "1px solid rgba(255, 255, 255, 0.15)",
+                      }}
+                    >
+                      GAMER
+                    </span>
+                  )}
+                </div>
               </p>
               <p className="text-muted-foreground">
-                {userProgress.points} Points
+                {formatPoints(userProgress.points)} Pts
               </p>
             </div>
           ))}

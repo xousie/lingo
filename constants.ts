@@ -23,6 +23,6 @@ export const quests = [
   },
   {
     title: "Reach The Summit",
-    value: 696969,
+    value: 1000000,
   },
 ];
