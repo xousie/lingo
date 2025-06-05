@@ -243,40 +243,47 @@ export const getUserSubscription = cache(async () => {
   };
 });
 
-export const getTopTenUsers = cache(async () => {
-  const { userId } = await auth();
-
-  if (!userId) {
-    return [];
-  }
-
-  // const data = await db.query.userProgress.findMany({
-  //   orderBy: (userProgress, { desc }) => [desc(userProgress.points)],
-  //   limit: 10,
-  //   columns: {
-  //     userId: true,
-  //     userName: true,
-  //     userImageSrc: true,
-  //     points: true,
-  //     isPro: userSubscription.isActive,
-  //   },
-  // });
-
-  const data = await db
+export const getTopTenUsers = async () => { // Or wherever this function is located
+  // Step 1: Select the necessary raw data from the database
+  // Drizzle will fetch these columns
+  const rawData = await db
     .select({
       userId: userProgress.userId,
       userName: userProgress.userName,
       userImageSrc: userProgress.userImageSrc,
       points: userProgress.points,
-      isPro: userSubscription.userId,
+      // Include the raw fields from userSubscription needed for the calculation
+      stripePriceId: userSubscription.stripePriceId,
+      stripeCurrentPeriodEnd: userSubscription.stripeCurrentPeriodEnd,
     })
     .from(userProgress)
-    .leftJoin(
+    .leftJoin( // Use leftJoin as a user might not have a subscription
       userSubscription,
       eq(userProgress.userId, userSubscription.userId)
     )
     .orderBy(desc(userProgress.points))
     .limit(10);
 
-  return data;
-});
+  // Step 2 & 3: Process the raw data in JavaScript to add the 'isPro' boolean
+  const processedData = rawData.map(row => {
+    // Calculate isPro using the fetched data and JavaScript logic
+    // Note: row.stripeCurrentPeriodEnd could be null due to the leftJoin
+    const isPro = !!(
+      row.stripePriceId &&
+      row.stripeCurrentPeriodEnd && // Add null check for date object itself
+      row.stripeCurrentPeriodEnd.getTime() + DAY_IN_MS > Date.now()
+    );
+
+    // Return a new object with the desired shape, including the calculated isPro boolean
+    return {
+      userId: row.userId,
+      userName: row.userName,
+      userImageSrc: row.userImageSrc,
+      points: row.points,
+      isPro: isPro, // This is now a standard JavaScript boolean
+    };
+  });
+
+  // Return the processed data
+  return processedData; // Or NextResponse.json(processedData) if in a route handler
+};
